@@ -16,7 +16,7 @@
   - name: Install needed packages
     homebrew:
       name: "{{ item }}"
-      state: present
+      state: latest
     with_items:
       - vim
       - tmux
@@ -28,6 +28,11 @@
       - cowsay
       - curl
       - wget
+
+  - name: Ensures that Eclipse is installed (it will not prompt error if Eclipse were already installed)
+    homebrew_cask:
+      name: eclipse-jee
+      state: present
 
   - name: Fix python dependencies for Ansible
     pip:
@@ -57,22 +62,24 @@
     with_items:
      - { name: ".zprezto", repo: "git@github.com:maiteb/prezto.git" }
      - { name: ".dotfiles", repo: "git@github.com:maiteb/dotfiles.git" }
+     - { name: ".tmux/plugins/tpm" , repo: "git@github.com:tmux-plugins/tpm.git" }
 
   - name: Changing shell for this user
     command: "chsh -s /bin/zsh"
 
-  # Not working properly
-  #  - name: List all dotfiles
-  #    command: "find {{ local_home }}/.dotfiles -maxdepth 1 -type f"
-  #    register: dotfiles
-  #
-  #  - name: Creates symbolic links for all dotfiles
-  #    file:
-  #      src: "{{ item }}"
-  #      dest: "{{local_home}}/"
-  #      state: link
-  #    with_items: "{{ dotfiles.stdout_lines }}"
+  - name: List all dotfiles
+    command: "find . -maxdepth 1 -type f"
+    args:
+      chdir: "{{ local_home }}/.dotfiles"
+    register: dotfiles
+
+  - name: Creates symbolic links for all dotfiles
+    file:
+      src: "{{ local_home }}/.dotfiles/{{ item }}"
+      dest: "{{ local_home }}/{{ item }}"
+      state: link
+    with_items: "{{ dotfiles.stdout_lines }}"
 
   - name: Creates symbolic links for prezto
-    script: scripts/copy_zprezto.sh
+    command: "zsh scripts/copy_zprezto"
 
