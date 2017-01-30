@@ -28,6 +28,7 @@
       - cowsay
       - curl
       - wget
+      - macdown
 
   - name: Ensures that Eclipse is installed (it will not prompt error if Eclipse were already installed)
     homebrew_cask:
