@@ -28,12 +28,14 @@
       - cowsay
       - curl
       - wget
-      - macdown
 
-  - name: Ensures that Eclipse is installed (it will not prompt error if Eclipse were already installed)
+  - name: Ensures that some casks are installed
     homebrew_cask:
-      name: eclipse-jee
+      name: "{{ item }}"
       state: present
+    with_items:
+      - eclipse-jee
+      - macdown
 
   - name: Fix python dependencies for Ansible
     pip:
@@ -86,4 +88,4 @@
     command: "zsh scripts/copy_zprezto"
 
   - name: Install Powerline fonts
-    script: "{{ local_home }}/.powerline/install.sh"
+    script: "{{ local_home }}/.powerline-fonts/install.sh"
