@@ -1,0 +1,78 @@
+---
+
+- name: Ensures that the environment is ready to go
+  hosts: local
+  connection: local
+  vars:
+     local_home: "{{ lookup('env','HOME') }}"
+
+  tasks:
+
+  - name: Ensures that homebrew is present
+    homebrew:
+      update_homebrew: yes
+      state: present
+
+  - name: Install needed packages
+    homebrew:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - vim
+      - tmux
+      - mysql
+      - z
+      - zsh
+      - nvm
+      - python
+      - cowsay
+      - curl
+      - wget
+
+  - name: Fix python dependencies for Ansible
+    pip:
+      name: "{{item}}"
+      state: present
+    with_items:
+      - paramiko
+      - pyYAML
+      - Jinja2
+      - httplib2
+      - six
+
+  - name: Download Janus (distribution of plugins for Vim)
+    get_url:
+     url: https://bit.ly/janus-bootstrap
+     dest: "/tmp/janus-bootstrap.sh"
+
+  - name: Install Janus
+    command: "bash /tmp/janus-bootstrap.sh"
+
+  - name: Cloning needed configuration repositories
+    git:
+     repo: "{{ item.repo }}"
+     dest: "{{ local_home }}/{{ item.name }}"
+     clone: yes
+     recursive: yes
+    with_items:
+     - { name: ".zprezto", repo: "git@github.com:maiteb/prezto.git" }
+     - { name: ".dotfiles", repo: "git@github.com:maiteb/dotfiles.git" }
+
+  - name: Changing shell for this user
+    command: "chsh -s /bin/zsh"
+
+  # Not working properly
+  #  - name: List all dotfiles
+  #    command: "find {{ local_home }}/.dotfiles -maxdepth 1 -type f"
+  #    register: dotfiles
+  #
+  #  - name: Creates symbolic links for all dotfiles
+  #    file:
+  #      src: "{{ item }}"
+  #      dest: "{{local_home}}/"
+  #      state: link
+  #    with_items: "{{ dotfiles.stdout_lines }}"
+
+  - name: Creates symbolic links for prezto
+    script: scripts/copy_zprezto.sh
+
