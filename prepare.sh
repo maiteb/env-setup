@@ -19,7 +19,7 @@ sudo pip install paramiko PyYAML Jinja2 httplib2 six
 
 # Using Ansible from source
 pushd $HOME
-git clone git://github.com/ansible/ansible.git --recursive
+git clone https://github.com/ansible/ansible.git --recursive
 cd ./ansible
 source ./hacking/env-setup
 echo "source ./hacking/env-setup" >> ~/.bashrc
