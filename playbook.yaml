@@ -63,7 +63,8 @@
     with_items:
      - { name: ".zprezto", repo: "git@github.com:maiteb/prezto.git" }
      - { name: ".dotfiles", repo: "git@github.com:maiteb/dotfiles.git" }
-     - { name: ".tmux/plugins/tpm" , repo: "git@github.com:tmux-plugins/tpm.git" }
+     - { name: ".tmux/plugins/tpm", repo: "git@github.com:tmux-plugins/tpm.git" }
+     - { name: ".powerline-fonts", repo: "git@github.com:powerline/fonts.git"}
 
   - name: Changing shell for this user
     command: "chsh -s /bin/zsh"
@@ -84,3 +85,5 @@
   - name: Creates symbolic links for prezto
     command: "zsh scripts/copy_zprezto"
 
+  - name: Install Powerline fonts
+    script: "{{ local_home }}/.powerline/install.sh"
