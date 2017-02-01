@@ -28,6 +28,7 @@
       - cowsay
       - curl
       - wget
+      - maven
 
   - name: Ensures that some casks are installed
     homebrew_cask:
