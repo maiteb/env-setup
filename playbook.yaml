@@ -36,6 +36,8 @@
     with_items:
       - eclipse-jee
       - macdown
+      - libreoffice
+      - spotify
 
   - name: Fix python dependencies for Ansible
     pip:
