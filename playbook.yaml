@@ -39,6 +39,7 @@
       - macdown
       - libreoffice
       - spotify
+      - docker
 
   - name: Fix python dependencies for Ansible
     pip:
